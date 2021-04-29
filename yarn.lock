@@ -4269,10 +4269,10 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
-pandasuite-bridge@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/pandasuite-bridge/-/pandasuite-bridge-4.2.3.tgz#73b27bc8339a150d243e5749053ca4b0b0b72142"
-  integrity sha512-YhJ4t0Xv+REZjgVRl56Bzch/2m/FBfwSen8RMiMumqpX3vhGINrGmr+zZuS6xE/TXTrl46tUgzWDOomnNRzsSA==
+pandasuite-bridge@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/pandasuite-bridge/-/pandasuite-bridge-4.3.0.tgz#bf6307adacc697af0889a17fe8dfa62468c5838f"
+  integrity sha512-Xvx2wW8xeSBwyfyM1kG342MoQ+OX21+4AevQjfcBu45mTtFGKqhx0iRaipizqfz6uJmUNrExc3kJNbVI1DK6Dg==
 
 parallel-transform@^1.1.0:
   version "1.2.0"

@@ -1,43 +1,99 @@
 import PandaBridge from 'pandasuite-bridge';
 
 let properties = null;
-let markers = null;
+let krpano = null;
+let videoMode = true;
 
 function myInit() {
-  // const imageUrl = PandaBridge.resolvePath('my_image.png');
-  // PandaBridge.send('imageChanged');
+  if (PandaBridge.resolvePath('video.mp4') && properties.video) {
+    krpano.call(`set(plugin[video].videourl, ${PandaBridge.resolvePath('video.mp4')});`);
+  } else if (!properties.video) {
+    videoMode = false;
+    krpano.call(`loadpano(null, image.sphere.url=${PandaBridge.resolvePath('image.jpg')}, MERGE, BLEND(1));`);
+  } else {
+    return;
+  }
+
+  if (!properties.isAutoPlay && videoMode) {
+    krpano.call('set(plugin[video].pausedonstart, true);');
+  }
+
+  if (!properties.isGyro) {
+    krpano.call('set(plugin[gyro].enabled, false);');
+  }
+
+  const panoElem = document.getElementById('pano');
+  const hammertime = new window.Hammer(panoElem);
+
+  hammertime.get('press').set({
+    time: 1,
+    pointers: 1,
+    threshold: 10,
+  });
+
+  hammertime.on('tap', (ev) => {
+    if (ev.tapCount === 1) {
+      PandaBridge.send('singleTap');
+    } else if (ev.tapCount === 2) {
+      PandaBridge.send('doubleTap');
+    }
+  });
+
+  let pressed = false;
+
+  hammertime.on('press', () => {
+    pressed = true;
+    PandaBridge.send('touchDown');
+  });
+
+  function onRelease() {
+    if (pressed) {
+      PandaBridge.send('touchUp');
+      pressed = false;
+    }
+  }
+
+  panoElem.addEventListener('mouseup', onRelease);
+  panoElem.addEventListener('touchend', onRelease);
+}
+
+function waitForInit() {
+  krpano = document.getElementById('krpanoSWFObject');
+  if (!krpano) {
+    window.requestAnimationFrame(waitForInit);
+  } else {
+    myInit();
+  }
 }
 
 PandaBridge.init(() => {
   PandaBridge.onLoad((pandaData) => {
     properties = pandaData.properties;
-    markers = pandaData.markers;
 
-    if (document.readyState === 'complete') {
-      myInit();
-    } else {
-      document.addEventListener('DOMContentLoaded', myInit, false);
+    waitForInit();
+  });
+
+  PandaBridge.listen('play', () => {
+    if (krpano && videoMode) {
+      krpano.call('plugin[video].play();');
     }
   });
 
-  PandaBridge.onUpdate((pandaData) => {
-    properties = pandaData.properties;
-    markers = pandaData.markers;
+  PandaBridge.listen('stop', () => {
+    if (krpano && videoMode) {
+      krpano.call('plugin[video].stop();');
+    }
   });
 
-  /* Markers */
-
-  PandaBridge.getSnapshotData(() => null);
-
-  PandaBridge.setSnapshotData((pandaData) => {
-    // pandaData.data.id
+  PandaBridge.listen('pause', () => {
+    if (krpano && videoMode) {
+      krpano.call('plugin[video].pause();');
+    }
   });
 
-  /* Actions */
-
-  PandaBridge.listen('changeColor', (args) => {
-  });
-
-  PandaBridge.synchronize('synchroImages', (percent) => {
+  PandaBridge.listen('togglePause', () => {
+    if (krpano && videoMode) {
+      krpano.call('plugin[video].togglepause();');
+    }
   });
 });

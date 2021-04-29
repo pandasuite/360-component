@@ -1,8 +1,8 @@
 {
-  "name": "js-boilerplate-component",
+  "name": "360-component",
   "version": "1.0.1",
   "main": "index.js",
-  "repository": "https://github.com/pandasuite/js-boilerplate-component.git",
+  "repository": "https://github.com/pandasuite/360-component.git",
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --open",
@@ -21,7 +21,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
-    "pandasuite-bridge": "^4.2.3"
+    "pandasuite-bridge": "^4.3.0"
   },
   "release-it": {
     "github": {
