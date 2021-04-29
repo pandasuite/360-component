@@ -1,0 +1,94 @@
+{
+  "version": "2.0.0",
+  "main": "",
+
+  "system": {
+    "localization": false,
+    "actions": [
+      {
+        "id": "toMarker",
+        "name": "Change Image",
+        "locale_name": {
+          "fr_FR": "Change Image"
+        },
+        "params": [
+          { "id": "useless", "name": "Useless", "locale_name": {"fr_FR": "Inutile"}, "type": "Boolean" }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "id": "triggerMarker",
+        "name": "Image",
+        "locale_name": {
+          "fr_FR": "Image"
+        }
+      }
+    ],
+    "markers": [
+      {
+        "params": [
+          { "id": "src", "name": "Source", "locale_name": {"fr_FR": "Source"}, "type": "String" }
+        ]
+      }
+    ]
+  },
+
+  "properties": [
+    {
+      "id": "searchTerm",
+      "name": "Search Term",
+      "locale_name": {
+        "fr_FR": "Terme de recherche"
+      },
+      "type": "String",
+      "value": "panda"
+    }
+  ],
+
+  "events": [
+    {
+      "id": "imageChanged",
+      "name": "Image Changed",
+      "locale_name": {
+        "fr_FR": "Image Changée"
+      }
+    }
+  ],
+
+  "actions": [
+    {
+      "id": "changeColor",
+      "name": "Change Color",
+      "params": [
+        {
+          "id": "backgroundColor",
+          "name": "Background Color",
+          "locale_name": {
+            "fr_FR": "Couleur de fond"
+          },
+          "type": "String",
+          "value": "#FFFFFF"
+        }
+      ]
+    }
+  ],
+
+  "synchronization": [
+    {
+      "id": "synchroImages",
+      "name": "Synchronize images",
+      "locale_name": {
+        "fr_FR": "Synchroniser images"
+      }
+    }
+  ],
+
+  "resources": [
+    {
+      "id": "my_image.png",
+      "type": "Image",
+      "localization": false
+    }
+  ]
+}
