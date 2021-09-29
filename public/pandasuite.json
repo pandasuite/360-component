@@ -39,7 +39,6 @@
       },
       "type": "Boolean",
       "value": false,
-      "style": "switch"
     },
     {
       "id": "isGyro",
