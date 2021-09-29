@@ -33,9 +33,9 @@
   "properties": [
     {
       "id": "video",
-      "name": "360 Video",
+      "name": "360° Video",
       "locale_name": {
-        "fr_FR": "Video 360"
+        "fr_FR": "Vidéo 360°"
       },
       "type": "Boolean",
       "value": false,
@@ -43,9 +43,9 @@
     },
     {
       "id": "isGyro",
-      "name": "Gyroscope enabled",
+      "name": "Gyroscope",
       "locale_name": {
-        "fr_FR": "Gyroscope activé"
+        "fr_FR": "Gyroscope"
       },
       "type": "Boolean",
       "value": true,
@@ -53,9 +53,9 @@
     },
     {
       "id": "isAutoPlay",
-      "name": "Auto play",
+      "name": "Autoplay",
       "locale_name": {
-        "fr_FR": "Lecture auto"
+        "fr_FR": "Lecture automatique"
       },
       "type": "Boolean",
       "value": true
