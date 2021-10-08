@@ -32,13 +32,25 @@
 
   "properties": [
     {
-      "id": "video",
-      "name": "360° Video",
-      "locale_name": {
-        "fr_FR": "Vidéo 360°"
-      },
-      "type": "Boolean",
-      "value": false,
+      "id": "type",
+      "type": "Dropdown",
+      "value": "image",
+      "items": [
+        {
+          "id": "image",
+          "name": "360° Image",
+          "locale_name": {
+            "fr_FR": "Image 360°"
+          }
+        },
+        {
+          "id": "video",
+          "name": "360° Video",
+          "locale_name": {
+            "fr_FR": "Vidéo 360°"
+          }
+        }
+      ]
     },
     {
       "id": "isGyro",
@@ -96,12 +108,12 @@
     {
       "id": "video.mp4",
       "type": "Video",
-      "hidden": "!properties.video.value"
+      "hidden": "properties.type.value != 'video'"
     },
     {
       "id": "image.jpg",
       "type": "Image",
-      "hidden": "properties.video.value"
+      "hidden": "properties.type.value != 'image'"
     }
   ]
 

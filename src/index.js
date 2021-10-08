@@ -5,9 +5,11 @@ let krpano = null;
 let videoMode = true;
 
 function myInit() {
-  if (PandaBridge.resolvePath('video.mp4') && properties.video) {
+  const { type } = properties;
+
+  if (PandaBridge.resolvePath('video.mp4') && type === 'video') {
     krpano.call(`set(plugin[video].videourl, ${PandaBridge.resolvePath('video.mp4')});`);
-  } else if (!properties.video) {
+  } else if (type === 'image') {
     videoMode = false;
     krpano.call(`loadpano(null, image.sphere.url=${PandaBridge.resolvePath('image.jpg')}, MERGE, BLEND(1));`);
   } else {
