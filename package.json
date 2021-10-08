@@ -1,6 +1,6 @@
 {
   "name": "360-component",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "repository": "https://github.com/pandasuite/360-component.git",
   "private": true,
