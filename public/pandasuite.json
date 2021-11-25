@@ -108,12 +108,14 @@
     {
       "id": "video.mp4",
       "type": "Video",
-      "hidden": "properties.type.value != 'video'"
+      "hidden": "properties.type.value != 'video'",
+      "required": true
     },
     {
       "id": "image.jpg",
       "type": "Image",
-      "hidden": "properties.type.value != 'image'"
+      "hidden": "properties.type.value != 'image'",
+      "required": true
     }
   ]
 
