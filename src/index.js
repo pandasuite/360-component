@@ -42,10 +42,17 @@ function myInit() {
   });
 
   let pressed = false;
+  let firstPressed = true;
 
   hammertime.on('press', () => {
     pressed = true;
     PandaBridge.send('touchDown');
+    if (firstPressed) {
+      if (typeof (DeviceMotionEvent) !== 'undefined' && typeof (DeviceMotionEvent.requestPermission) === 'function') {
+        DeviceMotionEvent.requestPermission();
+      }
+      firstPressed = false;
+    }
   });
 
   function onRelease() {
