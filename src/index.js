@@ -33,26 +33,29 @@ function myInit() {
     threshold: 10,
   });
 
+  let firstTap = true;
+
   hammertime.on('tap', (ev) => {
     if (ev.tapCount === 1) {
       PandaBridge.send('singleTap');
     } else if (ev.tapCount === 2) {
       PandaBridge.send('doubleTap');
     }
+    if (firstTap) {
+      if (typeof (DeviceMotionEvent) !== 'undefined' && typeof (DeviceMotionEvent.requestPermission) === 'function') {
+        DeviceMotionEvent.requestPermission().catch((err) => {
+          console.log(err);
+        });
+      }
+      firstTap = false;
+    }
   });
 
   let pressed = false;
-  let firstPressed = true;
 
   hammertime.on('press', () => {
     pressed = true;
     PandaBridge.send('touchDown');
-    if (firstPressed) {
-      if (typeof (DeviceMotionEvent) !== 'undefined' && typeof (DeviceMotionEvent.requestPermission) === 'function') {
-        DeviceMotionEvent.requestPermission();
-      }
-      firstPressed = false;
-    }
   });
 
   function onRelease() {
