@@ -11,7 +11,7 @@ function myInit() {
     krpano.call(`set(plugin[video].videourl, ${PandaBridge.resolvePath('video.mp4')});`);
   } else if (type === 'image') {
     videoMode = false;
-    krpano.call(`loadpano(null, image.sphere.url=${PandaBridge.resolvePath('image.jpg')}, MERGE, BLEND(1));`);
+    krpano.call(`loadpano(null, image.sphere.url=${PandaBridge.resolveImagePath('image.jpg', 'original')}, MERGE, BLEND(1));`);
   } else {
     return;
   }

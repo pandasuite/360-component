@@ -115,7 +115,8 @@
       "id": "image.jpg",
       "type": "Image",
       "hidden": "properties.type.value != 'image'",
-      "required": true
+      "required": true,
+      "sizes": ["original"]
     }
   ]
 
