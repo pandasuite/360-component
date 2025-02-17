@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server --open",
-    "build": "rm ./pandasuite-component.zip && webpack --mode production --devtool none && cd build && zip -r -X '../pandasuite-component.zip' *",
+    "build": "rm -f ./pandasuite-component.zip && webpack --mode production --devtool none && cd build && zip -r -X '../pandasuite-component.zip' *",
     "release": "yarn build && release-it --no-npm.publish"
   },
   "devDependencies": {
