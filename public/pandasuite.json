@@ -2,6 +2,10 @@
   "version": "2.0.0",
   "main": "",
 
+  "system": {
+    "markers": false
+  },
+  
   "events": [
     {
       "id": "singleTap",
