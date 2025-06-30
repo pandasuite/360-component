@@ -5,7 +5,7 @@
   "system": {
     "markers": false
   },
-  
+
   "events": [
     {
       "id": "singleTap",
@@ -113,7 +113,8 @@
       "id": "video.mp4",
       "type": "Video",
       "hidden": "properties.type.value != 'video'",
-      "required": true
+      "required": true,
+      "size": "2160p"
     },
     {
       "id": "image.jpg",
@@ -123,5 +124,4 @@
       "sizes": ["original"]
     }
   ]
-
 }
