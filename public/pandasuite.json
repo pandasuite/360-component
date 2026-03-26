@@ -1,28 +1,46 @@
 {
+  "meta": {
+    "stype": "three-sixty",
+    "componentURL": "https://github.com/pandasuite/360-component/",
+    "description": "Displays 360° panoramic images or videos with gyroscope and touch navigation. Supports hotspot markers and synchronization.",
+    "locale_description": {
+      "fr_FR": "Affiche des images ou vidéos panoramiques à 360° avec navigation par gyroscope et tactile. Supporte les marqueurs de points d'intérêt et la synchronisation."
+    }
+  },
   "version": "2.0.0",
   "main": "",
-
   "system": {
     "markers": false
   },
-
   "events": [
     {
       "id": "singleTap",
       "name": "Single tap",
       "locale_name": {
         "fr_FR": "Simple tap"
+      },
+      "description": "Fires when the user taps once on the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur tape une fois sur la vue à 360°."
       }
     },
     {
       "id": "doubleTap",
-      "name": "Double tap"
+      "name": "Double tap",
+      "description": "Fires when the user double-taps on the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur double-tape sur la vue à 360°."
+      }
     },
     {
       "id": "touchDown",
       "name": "Touch down",
       "locale_name": {
         "fr_FR": "Touche"
+      },
+      "description": "Fires when the user starts touching the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur commence à toucher la vue à 360°."
       }
     },
     {
@@ -30,10 +48,13 @@
       "name": "Touch up",
       "locale_name": {
         "fr_FR": "Relâche"
+      },
+      "description": "Fires when the user stops touching the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur arrête de toucher la vue à 360°."
       }
     }
   ],
-
   "properties": [
     {
       "id": "type",
@@ -54,7 +75,11 @@
             "fr_FR": "Vidéo 360°"
           }
         }
-      ]
+      ],
+      "description": "Content type: panoramic image or panoramic video.",
+      "locale_description": {
+        "fr_FR": "Type de contenu : image panoramique ou vidéo panoramique."
+      }
     },
     {
       "id": "isGyro",
@@ -64,7 +89,11 @@
       },
       "type": "Boolean",
       "value": true,
-      "separator": true
+      "separator": true,
+      "description": "Enable gyroscope-based navigation on supported devices.",
+      "locale_description": {
+        "fr_FR": "Activer la navigation par gyroscope sur les appareils compatibles."
+      }
     },
     {
       "id": "isAutoPlay",
@@ -73,16 +102,23 @@
         "fr_FR": "Lecture automatique"
       },
       "type": "Boolean",
-      "value": true
+      "value": true,
+      "description": "Start video playback automatically. Active for video type.",
+      "locale_description": {
+        "fr_FR": "Démarrer la lecture vidéo automatiquement. Actif pour le type vidéo."
+      }
     }
   ],
-
   "actions": [
     {
       "id": "play",
       "name": "Play",
       "locale_name": {
         "fr_FR": "Lecture"
+      },
+      "description": "Start or resume video playback.",
+      "locale_description": {
+        "fr_FR": "Démarrer ou reprendre la lecture vidéo."
       }
     },
     {
@@ -90,6 +126,10 @@
       "name": "Stop",
       "locale_name": {
         "fr_FR": "Arrêter"
+      },
+      "description": "Stop video playback.",
+      "locale_description": {
+        "fr_FR": "Arrêter la lecture vidéo."
       }
     },
     {
@@ -97,6 +137,10 @@
       "name": "Pause",
       "locale_name": {
         "fr_FR": "Mettre en pause"
+      },
+      "description": "Pause video playback.",
+      "locale_description": {
+        "fr_FR": "Mettre en pause la lecture vidéo."
       }
     },
     {
@@ -104,24 +148,37 @@
       "name": "Play/Pause",
       "locale_name": {
         "fr_FR": "Lecture/Pause"
+      },
+      "description": "Toggle between play and pause.",
+      "locale_description": {
+        "fr_FR": "Basculer entre lecture et pause."
       }
     }
   ],
-
   "resources": [
     {
       "id": "video.mp4",
       "type": "Video",
       "hidden": "properties.type.value != 'video'",
       "required": true,
-      "size": "2160p"
+      "size": "2160p",
+      "description": "360° video file (MP4 format).",
+      "locale_description": {
+        "fr_FR": "Fichier vidéo 360° (format MP4)."
+      }
     },
     {
       "id": "image.jpg",
       "type": "Image",
       "hidden": "properties.type.value != 'image'",
       "required": true,
-      "sizes": ["original"]
+      "sizes": [
+        "original"
+      ],
+      "description": "360° panoramic image (equirectangular projection).",
+      "locale_description": {
+        "fr_FR": "Image panoramique 360° (projection équirectangulaire)."
+      }
     }
   ]
 }
