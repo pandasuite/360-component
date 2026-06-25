@@ -7,6 +7,7 @@ import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
 import { StereoPlugin } from '@photo-sphere-viewer/stereo-plugin';
 import { MarkersPlugin } from '@photo-sphere-viewer/markers-plugin';
 import { IMG_SIZES, pickImageSize, imageMarkerSize } from './responsive.js';
+import { viewerOptions } from './viewerOptions.js';
 
 import '@photo-sphere-viewer/core/index.css';
 import '@photo-sphere-viewer/markers-plugin/index.css';
@@ -471,6 +472,10 @@ function applyOptions() {
     container.classList.toggle('ps-hide-controls', !properties.showControls);
   }
 
+  // Navigation/view options apply live and aren't navbar-toggleable (no user-toggle
+  // to clobber), so re-assert them unconditionally; setOptions is idempotent.
+  viewer.setOptions(viewerOptions(properties));
+
   // Mute, gyroscope and auto-rotation are also toggleable live from the navbar, so
   // re-assert each only when its panel value changed (vs appliedProps) — otherwise an
   // unrelated update would revert the user's live toggle.
@@ -616,6 +621,8 @@ function createViewer(url) {
     canvasBackground: '#000000',
     loadingTxt: '',
     rendererParameters: { preserveDrawingBuffer: true },
+    // Navigation/view options up-front so the first paint respects fisheye/min-maxFov.
+    ...viewerOptions(properties),
   };
   // Aim PSV at the default view up-front so the very first rendered frame is
   // correct (PSV applies defaultYaw/Pitch/ZoomLvl during the initial load).
