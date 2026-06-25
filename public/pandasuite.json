@@ -63,6 +63,15 @@
             "hidden": "marker.type != 'hotspot'"
           },
           {
+            "id": "image",
+            "name": "Image",
+            "locale_name": { "fr_FR": "Image" },
+            "type": "Image",
+            "bindable": true,
+            "sizes": ["128w", "256w", "512w"],
+            "hidden": "marker.type != 'hotspot'"
+          },
+          {
             "id": "size",
             "name": "Size",
             "locale_name": { "fr_FR": "Taille" },
@@ -77,7 +86,7 @@
             "locale_name": { "fr_FR": "Couleur" },
             "type": "Color",
             "value": "#FFFFFF",
-            "hidden": "marker.type != 'hotspot'"
+            "hidden": "marker.type != 'hotspot' || marker.image"
           },
           {
             "id": "border",
@@ -85,7 +94,7 @@
             "locale_name": { "fr_FR": "Bordure" },
             "type": "Border",
             "value": { "solid": { "weight": 2, "color": 16777215, "alpha": 1 } },
-            "hidden": "marker.type != 'hotspot'"
+            "hidden": "marker.type != 'hotspot' || marker.image"
           }
         ]
       }

@@ -30,6 +30,15 @@
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         cursor: pointer;
       }
+      /* Inner div of an image hotspot (the marker html is a background-image div,
+         like .psv-hotspot). Scoped under #viewer for the same box-sizing cascade
+         reason. No shadow (a rectangular shadow looks wrong on a transparent PNG)
+         and no border-radius. Hover scaling is handled by PSV's native hoverScale
+         (see baseConfig in src/index.js), NOT a CSS transform — a CSS scale here
+         would grow the marker without PSV knowing and let it overlap the tooltip. */
+      #viewer .psv-hotspot-img {
+        cursor: pointer;
+      }
       /* Video overlays follow `showControls` at runtime: VideoPlugin builds them
          once, so we always create them and hide them here when controls are off.
          `!important` is required because PSV's components show themselves via an

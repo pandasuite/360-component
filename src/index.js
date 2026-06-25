@@ -6,6 +6,7 @@ import { GyroscopePlugin } from '@photo-sphere-viewer/gyroscope-plugin';
 import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
 import { StereoPlugin } from '@photo-sphere-viewer/stereo-plugin';
 import { MarkersPlugin } from '@photo-sphere-viewer/markers-plugin';
+import { IMG_SIZES, pickImageSize, imageMarkerSize } from './responsive.js';
 
 import '@photo-sphere-viewer/core/index.css';
 import '@photo-sphere-viewer/markers-plugin/index.css';
@@ -55,6 +56,10 @@ const shortestArc = (from, to) => ((to - from + 540) % 360) - 180;
 const escapeHtml = (s) => s.replace(/[&<>"']/g, (c) => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
+// Escape a value for a single-quoted CSS url() inside a double-quoted style attribute
+// — `image` is bindable to external data, like the tooltip label. CSS hex escapes
+// neutralise the quote/backslash/newline that could break out of the url() token.
+const cssUrl = (u) => String(u).replace(/[\\'"\r\n]/g, (c) => `\\${c.charCodeAt(0).toString(16)} `);
 const isFrench = () => (PandaBridge.currentLanguage || '').toLowerCase().startsWith('fr');
 
 function resolvePanorama() {
@@ -195,6 +200,52 @@ function dotConfig(m) {
   });
 }
 
+// Preload the image to learn its natural dimensions: PSV requires an explicit
+// size for `image` markers, and the resource entry carries no width/height.
+function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    // A stalled request can fire neither onload nor onerror; without this timeout the
+    // await in imageConfig would never settle and block setMarkers for ALL markers.
+    const timer = setTimeout(reject, 8000);
+    img.onload = () => {
+      clearTimeout(timer);
+      resolve(img);
+    };
+    img.onerror = () => {
+      clearTimeout(timer);
+      reject();
+    };
+    img.src = url;
+  });
+}
+
+// Image hotspot: resolve the responsive rendition for the current display width,
+// learn its ratio, size by width. Falls back to the dot if the image can't be
+// resolved (no srcset) or fails to load, so the marker stays present/clickable.
+// Rendered as an `html` marker with an INNER div (background-image), mirroring
+// the dot — never a native `image` marker. PSV writes position straight onto the
+// outer marker element (and on old Chromium our fallback drives it via `transform`),
+// so we keep that element free of CSS transitions to avoid lag; the hover scale is
+// PSV's native hoverScale (see baseConfig), not a CSS transform.
+async function imageConfig(m) {
+  const width = Number(m.size) || 32;
+  const sizeKey = pickImageSize(width, window.devicePixelRatio || 1, IMG_SIZES);
+  const url = PandaBridge.resolveImagePath(m.image, sizeKey);
+  if (!url) {
+    return dotConfig(m);
+  }
+  try {
+    const img = await loadImage(url);
+    return Object.assign(baseConfig(m), {
+      html: `<div class="psv-hotspot-img" style="width:100%;height:100%;background-image:url('${cssUrl(url)}');background-size:contain;background-repeat:no-repeat;background-position:center;"></div>`,
+      size: imageMarkerSize(width, img.naturalWidth, img.naturalHeight),
+    });
+  } catch (e) {
+    return dotConfig(m);
+  }
+}
+
 async function applyMarkers() {
   if (!viewer) {
     return;
@@ -210,7 +261,11 @@ async function applyMarkers() {
   const list = markers || [];
   viewpoints = list.filter((m) => m.type === 'viewpoint');
   const hotspots = list.filter((m) => m.type === 'hotspot');
-  const configs = hotspots.map((m) => dotConfig(m));
+  // Image hotspots resolve asynchronously (preload for ratio); dots resolve
+  // synchronously. Build them all, then set in one pass.
+  const configs = await Promise.all(
+    hotspots.map((m) => (m.image ? imageConfig(m) : Promise.resolve(dotConfig(m)))),
+  );
   // The viewer may have been destroyed (image<->video rebuild) while awaiting, a
   // newer applyMarkers call may have superseded this one, or the user may have
   // entered VR during the image preload (re-check stereo, since the guard above ran
