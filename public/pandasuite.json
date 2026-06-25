@@ -7,7 +7,7 @@
       "fr_FR": "Affiche des images ou vidéos panoramiques à 360° avec navigation gyroscope et tactile, contrôles à l'écran optionnels, rotation automatique, mode VR, et marqueurs points de vue/points d'intérêt."
     }
   },
-  "version": "2.0.0",
+  "version": "2.1.0",
   "main": "",
   "system": {
     "markers": [
@@ -111,11 +111,15 @@
         "params": [
           {
             "id": "transitionSpeed",
-            "name": "Transition (ms)",
-            "locale_name": { "fr_FR": "Transition (ms)" },
+            "name": "Transition duration",
+            "locale_name": { "fr_FR": "Durée de transition" },
             "type": "Integer",
             "value": 1500,
-            "restrict": { "min": 0, "max": 10000, "step": 100 }
+            "restrict": { "min": 0, "max": 10000, "step": 100 },
+            "description": "Camera animation duration in milliseconds (0 = instant).",
+            "locale_description": {
+              "fr_FR": "Durée de l'animation de la caméra en millisecondes (0 = instantané)."
+            }
           }
         ]
       }
@@ -186,8 +190,8 @@
     },
     {
       "id": "isVR",
-      "name": "VR mode (Cardboard)",
-      "locale_name": { "fr_FR": "Mode VR (Cardboard)" },
+      "name": "VR mode",
+      "locale_name": { "fr_FR": "Mode VR" },
       "type": "Boolean",
       "value": false,
       "description": "Add a stereoscopic VR button (split-screen, gyroscope-based).",
@@ -218,6 +222,115 @@
       "description": "Auto-rotation speed in rotations per minute.",
       "locale_description": {
         "fr_FR": "Vitesse de rotation automatique en tours par minute."
+      }
+    },
+    {
+      "id": "mousemove",
+      "name": "Drag to rotate",
+      "locale_name": { "fr_FR": "Glisser pour tourner" },
+      "type": "Boolean",
+      "value": true,
+      "separator": true,
+      "description": "Let the user drag (or swipe) to rotate the view.",
+      "locale_description": {
+        "fr_FR": "Permettre à l'utilisateur de faire glisser (ou balayer) pour tourner la vue."
+      }
+    },
+    {
+      "id": "moveSpeed",
+      "name": "Drag speed",
+      "locale_name": { "fr_FR": "Vitesse de glissement" },
+      "type": "Float",
+      "value": 1,
+      "restrict": { "min": 0.1, "max": 5, "step": 0.1 },
+      "hidden": "!properties.mousemove.value",
+      "description": "Drag rotation speed multiplier (1 = default).",
+      "locale_description": {
+        "fr_FR": "Multiplicateur de vitesse de rotation au glissement (1 = défaut)."
+      }
+    },
+    {
+      "id": "moveInertia",
+      "name": "Inertia",
+      "locale_name": { "fr_FR": "Inertie" },
+      "type": "Float",
+      "value": 0.8,
+      "restrict": { "min": 0, "max": 1, "step": 0.05 },
+      "hidden": "!properties.mousemove.value",
+      "description": "Glide after releasing a drag (0 = stop immediately, 0.8 = default).",
+      "locale_description": {
+        "fr_FR": "Inertie après un glissement (0 = arrêt immédiat, 0.8 = défaut)."
+      }
+    },
+    {
+      "id": "touchmoveTwoFingers",
+      "name": "Two-finger pan",
+      "locale_name": { "fr_FR": "Navigation à deux doigts" },
+      "type": "Boolean",
+      "value": false,
+      "description": "Require two fingers to rotate on touch, so a one-finger swipe scrolls the page.",
+      "locale_description": {
+        "fr_FR": "Exiger deux doigts pour tourner au toucher, afin qu'un balayage à un doigt fasse défiler la page."
+      }
+    },
+    {
+      "id": "mousewheel",
+      "name": "Scroll to zoom",
+      "locale_name": { "fr_FR": "Molette pour zoomer" },
+      "type": "Boolean",
+      "value": true,
+      "description": "Let the user zoom with the mouse wheel.",
+      "locale_description": {
+        "fr_FR": "Permettre à l'utilisateur de zoomer avec la molette."
+      }
+    },
+    {
+      "id": "zoomSpeed",
+      "name": "Zoom speed",
+      "locale_name": { "fr_FR": "Vitesse du zoom" },
+      "type": "Float",
+      "value": 1,
+      "restrict": { "min": 0.1, "max": 5, "step": 0.1 },
+      "hidden": "!properties.mousewheel.value",
+      "description": "Zoom speed multiplier (1 = default).",
+      "locale_description": {
+        "fr_FR": "Multiplicateur de vitesse du zoom (1 = défaut)."
+      }
+    },
+    {
+      "id": "minFov",
+      "name": "Min FOV",
+      "locale_name": { "fr_FR": "FOV min" },
+      "type": "Integer",
+      "value": 30,
+      "separator": true,
+      "restrict": { "min": 1, "max": 90, "step": 1 },
+      "description": "Smallest field of view in degrees — the zoom-in limit (30 = default).",
+      "locale_description": {
+        "fr_FR": "Champ de vision minimal en degrés — limite de zoom avant (30 = défaut)."
+      }
+    },
+    {
+      "id": "maxFov",
+      "name": "Max FOV",
+      "locale_name": { "fr_FR": "FOV max" },
+      "type": "Integer",
+      "value": 90,
+      "restrict": { "min": 30, "max": 120, "step": 1 },
+      "description": "Largest field of view in degrees — the zoom-out limit (90 = default).",
+      "locale_description": {
+        "fr_FR": "Champ de vision maximal en degrés — limite de zoom arrière (90 = défaut)."
+      }
+    },
+    {
+      "id": "fisheye",
+      "name": "Fisheye effect",
+      "locale_name": { "fr_FR": "Effet fisheye" },
+      "type": "Boolean",
+      "value": false,
+      "description": "Apply a fisheye (barrel) distortion to the view.",
+      "locale_description": {
+        "fr_FR": "Appliquer une distorsion fisheye (barillet) à la vue."
       }
     },
     {
