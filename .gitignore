@@ -4,6 +4,7 @@ node_modules
 /build
 
 # misc
+.omc
 .DS_Store
 .env.local
 .env.development.local

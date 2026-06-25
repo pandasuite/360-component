@@ -1,27 +1,31 @@
 {
   "name": "360-component",
-  "version": "1.0.11",
+  "version": "2.0.0",
+  "type": "module",
   "main": "index.js",
   "repository": "https://github.com/pandasuite/360-component.git",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --open",
-    "build": "rm -f ./pandasuite-component.zip && webpack --mode production --devtool none && cd build && zip -r -X '../pandasuite-component.zip' *",
+    "start": "vite",
+    "test": "node --test",
+    "build": "rm -rf ./pandasuite-component.zip && vite build && cd build && zip -r -X '../pandasuite-component.zip' *",
     "release": "yarn build && release-it --no-npm.publish"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.2",
-    "eslint": "^7.2.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.21.2",
-    "release-it": "^13.6.3",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
+    "eslint": "^9.18.0",
+    "release-it": "^19.2.4",
+    "vite": "^7.3.1"
   },
   "dependencies": {
-    "pandasuite-bridge": "^4.4.1"
+    "@photo-sphere-viewer/autorotate-plugin": "^5.14.1",
+    "@photo-sphere-viewer/core": "^5.14.1",
+    "@photo-sphere-viewer/equirectangular-video-adapter": "^5.14.1",
+    "@photo-sphere-viewer/gyroscope-plugin": "^5.14.1",
+    "@photo-sphere-viewer/markers-plugin": "^5.14.1",
+    "@photo-sphere-viewer/stereo-plugin": "^5.14.1",
+    "@photo-sphere-viewer/video-plugin": "^5.14.1",
+    "pandasuite-bridge": "^5.0.5",
+    "three": "^0.184.0"
   },
   "release-it": {
     "github": {
@@ -36,9 +40,10 @@
       ">0.2%",
       "not dead",
       "not op_mini all",
-      "IE >= 9",
-      "Android > 0",
-      "iOS > 0"
+      "Chrome >= 87",
+      "Android >= 5",
+      "Safari >= 13.1",
+      "iOS >= 13.4"
     ],
     "development": [
       "last 1 chrome version",

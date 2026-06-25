@@ -2,78 +2,149 @@
   "meta": {
     "stype": "three-sixty",
     "componentURL": "https://github.com/pandasuite/360-component/",
-    "description": "Displays 360° panoramic images or videos with gyroscope and touch navigation. Supports hotspot markers and synchronization.",
+    "description": "Displays 360° panoramic images or videos with gyroscope and touch navigation, optional on-screen controls, auto-rotation, VR mode, and viewpoint/hotspot markers.",
     "locale_description": {
-      "fr_FR": "Affiche des images ou vidéos panoramiques à 360° avec navigation par gyroscope et tactile. Supporte les marqueurs de points d'intérêt et la synchronisation."
+      "fr_FR": "Affiche des images ou vidéos panoramiques à 360° avec navigation gyroscope et tactile, contrôles à l'écran optionnels, rotation automatique, mode VR, et marqueurs points de vue/points d'intérêt."
     }
   },
   "version": "2.0.0",
   "main": "",
   "system": {
-    "markers": false
-  },
-  "events": [
-    {
-      "id": "singleTap",
-      "name": "Single tap",
-      "locale_name": {
-        "fr_FR": "Simple tap"
-      },
-      "description": "Fires when the user taps once on the 360° view.",
-      "locale_description": {
-        "fr_FR": "Se déclenche quand l'utilisateur tape une fois sur la vue à 360°."
+    "markers": [
+      {
+        "hideSystemId": true,
+        "params": [
+          {
+            "id": "yaw",
+            "name": "Horizontal angle",
+            "locale_name": { "fr_FR": "Angle horizontal" },
+            "type": "Number",
+            "value": 0,
+            "restrict": { "min": -180, "max": 180, "step": 1 },
+            "hidden": "marker.type != 'viewpoint'"
+          },
+          {
+            "id": "pitch",
+            "name": "Vertical angle",
+            "locale_name": { "fr_FR": "Angle vertical" },
+            "type": "Number",
+            "value": 0,
+            "restrict": { "min": -90, "max": 90, "step": 1 },
+            "hidden": "marker.type != 'viewpoint'"
+          },
+          {
+            "id": "zoom",
+            "name": "Zoom",
+            "locale_name": { "fr_FR": "Zoom" },
+            "type": "Integer",
+            "value": 50,
+            "restrict": { "min": 0, "max": 100, "step": 1 },
+            "hidden": "marker.type != 'viewpoint'"
+          },
+          {
+            "id": "updateViewpoint",
+            "name": "Marker data",
+            "locale_name": { "fr_FR": "Données du marqueur" },
+            "separator": true,
+            "editorControl": {
+              "type": "button",
+              "action_id": "updateViewpoint",
+              "name": "Update",
+              "locale_name": { "fr_FR": "Mettre à jour" }
+            },
+            "hidden": "marker.type != 'viewpoint'"
+          },
+          {
+            "id": "label",
+            "name": "Label",
+            "locale_name": { "fr_FR": "Libellé" },
+            "type": "String",
+            "bindable": true,
+            "hidden": "marker.type != 'hotspot'"
+          },
+          {
+            "id": "size",
+            "name": "Size",
+            "locale_name": { "fr_FR": "Taille" },
+            "type": "Integer",
+            "value": 32,
+            "restrict": { "min": 8, "max": 128, "step": 1 },
+            "hidden": "marker.type != 'hotspot'"
+          },
+          {
+            "id": "color",
+            "name": "Color",
+            "locale_name": { "fr_FR": "Couleur" },
+            "type": "Color",
+            "value": "#FFFFFF",
+            "hidden": "marker.type != 'hotspot'"
+          },
+          {
+            "id": "border",
+            "name": "Border",
+            "locale_name": { "fr_FR": "Bordure" },
+            "type": "Border",
+            "value": { "solid": { "weight": 2, "color": 16777215, "alpha": 1 } },
+            "hidden": "marker.type != 'hotspot'"
+          }
+        ]
       }
-    },
-    {
-      "id": "doubleTap",
-      "name": "Double tap",
-      "description": "Fires when the user double-taps on the 360° view.",
-      "locale_description": {
-        "fr_FR": "Se déclenche quand l'utilisateur double-tape sur la vue à 360°."
+    ],
+    "actions": [
+      {
+        "id": "toMarker",
+        "name": "Go to marker",
+        "locale_name": { "fr_FR": "Aller au marqueur" },
+        "description": "Animate the camera to a viewpoint or hotspot marker.",
+        "locale_description": {
+          "fr_FR": "Anime la caméra vers un marqueur point de vue ou point d'intérêt."
+        },
+        "params": [
+          {
+            "id": "transitionSpeed",
+            "name": "Transition (ms)",
+            "locale_name": { "fr_FR": "Transition (ms)" },
+            "type": "Integer",
+            "value": 1500,
+            "restrict": { "min": 0, "max": 10000, "step": 100 }
+          }
+        ]
       }
-    },
-    {
-      "id": "touchDown",
-      "name": "Touch down",
-      "locale_name": {
-        "fr_FR": "Touche"
-      },
-      "description": "Fires when the user starts touching the 360° view.",
-      "locale_description": {
-        "fr_FR": "Se déclenche quand l'utilisateur commence à toucher la vue à 360°."
+    ],
+    "events": [
+      {
+        "id": "triggerMarker",
+        "name": "Marker tapped",
+        "locale_name": { "fr_FR": "Marqueur tapé" },
+        "hidden": "marker.type != 'hotspot'",
+        "description": "Fires when a hotspot marker is tapped.",
+        "locale_description": {
+          "fr_FR": "Se déclenche quand un point d'intérêt est tapé."
+        }
       }
-    },
-    {
-      "id": "touchUp",
-      "name": "Touch up",
-      "locale_name": {
-        "fr_FR": "Relâche"
-      },
-      "description": "Fires when the user stops touching the 360° view.",
-      "locale_description": {
-        "fr_FR": "Se déclenche quand l'utilisateur arrête de toucher la vue à 360°."
+    ],
+    "defaults": {
+      "markers": {
+        "description": { "value": "%s", "args": [{ "key": "label" }] }
       }
     }
-  ],
+  },
   "properties": [
     {
       "id": "type",
+      "name": "Type",
       "type": "Dropdown",
       "value": "image",
       "items": [
         {
           "id": "image",
           "name": "360° Image",
-          "locale_name": {
-            "fr_FR": "Image 360°"
-          }
+          "locale_name": { "fr_FR": "Image 360°" }
         },
         {
           "id": "video",
           "name": "360° Video",
-          "locale_name": {
-            "fr_FR": "Vidéo 360°"
-          }
+          "locale_name": { "fr_FR": "Vidéo 360°" }
         }
       ],
       "description": "Content type: panoramic image or panoramic video.",
@@ -82,30 +153,161 @@
       }
     },
     {
+      "id": "showControls",
+      "name": "Show controls",
+      "locale_name": { "fr_FR": "Afficher les contrôles" },
+      "type": "Boolean",
+      "value": false,
+      "separator": true,
+      "description": "Show the on-screen control bar (zoom, move, fullscreen, video controls).",
+      "locale_description": {
+        "fr_FR": "Afficher la barre de contrôle à l'écran (zoom, déplacement, plein écran, contrôles vidéo)."
+      }
+    },
+    {
       "id": "isGyro",
       "name": "Gyroscope",
-      "locale_name": {
-        "fr_FR": "Gyroscope"
-      },
+      "locale_name": { "fr_FR": "Gyroscope" },
       "type": "Boolean",
       "value": true,
-      "separator": true,
       "description": "Enable gyroscope-based navigation on supported devices.",
       "locale_description": {
         "fr_FR": "Activer la navigation par gyroscope sur les appareils compatibles."
       }
     },
     {
+      "id": "isVR",
+      "name": "VR mode (Cardboard)",
+      "locale_name": { "fr_FR": "Mode VR (Cardboard)" },
+      "type": "Boolean",
+      "value": false,
+      "description": "Add a stereoscopic VR button (split-screen, gyroscope-based).",
+      "locale_description": {
+        "fr_FR": "Ajouter un bouton VR stéréoscopique (écran scindé, basé sur le gyroscope)."
+      }
+    },
+    {
+      "id": "isAutoRotate",
+      "name": "Auto-rotation",
+      "locale_name": { "fr_FR": "Rotation automatique" },
+      "type": "Boolean",
+      "value": false,
+      "separator": true,
+      "description": "Slowly rotate the view automatically until the user interacts.",
+      "locale_description": {
+        "fr_FR": "Faire pivoter lentement la vue automatiquement jusqu'à interaction de l'utilisateur."
+      }
+    },
+    {
+      "id": "autoRotateSpeed",
+      "name": "Rotation speed",
+      "locale_name": { "fr_FR": "Vitesse de rotation" },
+      "type": "Float",
+      "value": 1,
+      "restrict": { "min": 0.1, "max": 10, "step": 0.1 },
+      "hidden": "!properties.isAutoRotate.value",
+      "description": "Auto-rotation speed in rotations per minute.",
+      "locale_description": {
+        "fr_FR": "Vitesse de rotation automatique en tours par minute."
+      }
+    },
+    {
       "id": "isAutoPlay",
       "name": "Autoplay",
-      "locale_name": {
-        "fr_FR": "Lecture automatique"
-      },
+      "locale_name": { "fr_FR": "Lecture automatique" },
       "type": "Boolean",
       "value": true,
-      "description": "Start video playback automatically. Active for video type.",
+      "separator": true,
+      "hidden": "properties.type.value != 'video'",
+      "description": "Start video playback automatically.",
       "locale_description": {
-        "fr_FR": "Démarrer la lecture vidéo automatiquement. Actif pour le type vidéo."
+        "fr_FR": "Démarrer la lecture vidéo automatiquement."
+      }
+    },
+    {
+      "id": "isMuted",
+      "name": "Muted",
+      "locale_name": { "fr_FR": "Muet" },
+      "type": "Boolean",
+      "value": false,
+      "hidden": "properties.type.value != 'video'",
+      "description": "Mute the video audio. Required for reliable autoplay on mobile.",
+      "locale_description": {
+        "fr_FR": "Couper le son de la vidéo. Nécessaire pour une lecture automatique fiable sur mobile."
+      }
+    },
+    {
+      "id": "isLoop",
+      "name": "Loop",
+      "locale_name": { "fr_FR": "Boucle" },
+      "type": "Boolean",
+      "value": false,
+      "hidden": "properties.type.value != 'video'",
+      "description": "Restart the video automatically when it ends.",
+      "locale_description": {
+        "fr_FR": "Redémarrer la vidéo automatiquement à la fin."
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "singleTap",
+      "name": "Single tap",
+      "locale_name": { "fr_FR": "Simple tap" },
+      "description": "Fires when the user taps once on the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur tape une fois sur la vue à 360°."
+      },
+      "queryable": {
+        "yaw": 0,
+        "__desc_yaw": {
+          "name": "Horizontal angle",
+          "locale_name": { "fr_FR": "Angle horizontal" }
+        },
+        "pitch": 0,
+        "__desc_pitch": {
+          "name": "Vertical angle",
+          "locale_name": { "fr_FR": "Angle vertical" }
+        }
+      }
+    },
+    {
+      "id": "doubleTap",
+      "name": "Double tap",
+      "locale_name": { "fr_FR": "Double tap" },
+      "description": "Fires when the user double-taps on the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur double-tape sur la vue à 360°."
+      },
+      "queryable": {
+        "yaw": 0,
+        "__desc_yaw": {
+          "name": "Horizontal angle",
+          "locale_name": { "fr_FR": "Angle horizontal" }
+        },
+        "pitch": 0,
+        "__desc_pitch": {
+          "name": "Vertical angle",
+          "locale_name": { "fr_FR": "Angle vertical" }
+        }
+      }
+    },
+    {
+      "id": "touchDown",
+      "name": "Touch down",
+      "locale_name": { "fr_FR": "Touche" },
+      "description": "Fires when the user starts touching the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur commence à toucher la vue à 360°."
+      }
+    },
+    {
+      "id": "touchUp",
+      "name": "Touch up",
+      "locale_name": { "fr_FR": "Relâche" },
+      "description": "Fires when the user stops touching the 360° view.",
+      "locale_description": {
+        "fr_FR": "Se déclenche quand l'utilisateur arrête de toucher la vue à 360°."
       }
     }
   ],
@@ -113,9 +315,7 @@
     {
       "id": "play",
       "name": "Play",
-      "locale_name": {
-        "fr_FR": "Lecture"
-      },
+      "locale_name": { "fr_FR": "Lecture" },
       "description": "Start or resume video playback.",
       "locale_description": {
         "fr_FR": "Démarrer ou reprendre la lecture vidéo."
@@ -124,20 +324,16 @@
     {
       "id": "stop",
       "name": "Stop",
-      "locale_name": {
-        "fr_FR": "Arrêter"
-      },
-      "description": "Stop video playback.",
+      "locale_name": { "fr_FR": "Arrêter" },
+      "description": "Stop video playback and rewind to the start.",
       "locale_description": {
-        "fr_FR": "Arrêter la lecture vidéo."
+        "fr_FR": "Arrêter la lecture vidéo et revenir au début."
       }
     },
     {
       "id": "pause",
       "name": "Pause",
-      "locale_name": {
-        "fr_FR": "Mettre en pause"
-      },
+      "locale_name": { "fr_FR": "Mettre en pause" },
       "description": "Pause video playback.",
       "locale_description": {
         "fr_FR": "Mettre en pause la lecture vidéo."
@@ -146,22 +342,33 @@
     {
       "id": "togglePause",
       "name": "Play/Pause",
-      "locale_name": {
-        "fr_FR": "Lecture/Pause"
-      },
+      "locale_name": { "fr_FR": "Lecture/Pause" },
       "description": "Toggle between play and pause.",
       "locale_description": {
         "fr_FR": "Basculer entre lecture et pause."
       }
     }
   ],
+  "synchronization": [
+    {
+      "id": "synchroMarkers",
+      "name": "Synchronize viewpoints",
+      "locale_name": { "fr_FR": "Synchroniser les points de vue" },
+      "description": "Interpolate the camera between viewpoint markers from another component.",
+      "locale_description": {
+        "fr_FR": "Interpoler la caméra entre les marqueurs points de vue depuis un autre composant."
+      }
+    }
+  ],
   "resources": [
     {
       "id": "video.mp4",
+      "name": "Video",
+      "locale_name": { "fr_FR": "Vidéo" },
       "type": "Video",
-      "hidden": "properties.type.value != 'video'",
       "required": true,
       "size": "2160p",
+      "hidden": "properties.type.value != 'video'",
       "description": "360° video file (MP4 format).",
       "locale_description": {
         "fr_FR": "Fichier vidéo 360° (format MP4)."
@@ -169,12 +376,12 @@
     },
     {
       "id": "image.jpg",
+      "name": "Image",
+      "locale_name": { "fr_FR": "Image" },
       "type": "Image",
-      "hidden": "properties.type.value != 'image'",
       "required": true,
-      "sizes": [
-        "original"
-      ],
+      "sizes": ["original"],
+      "hidden": "properties.type.value != 'image'",
       "description": "360° panoramic image (equirectangular projection).",
       "locale_description": {
         "fr_FR": "Image panoramique 360° (projection équirectangulaire)."
