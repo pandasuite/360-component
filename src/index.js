@@ -8,6 +8,7 @@ import { StereoPlugin } from '@photo-sphere-viewer/stereo-plugin';
 import { MarkersPlugin } from '@photo-sphere-viewer/markers-plugin';
 import { IMG_SIZES, pickImageSize, imageMarkerSize } from './responsive.js';
 import { viewerOptions } from './viewerOptions.js';
+import { detectViewpoint } from './viewpointDetector.js';
 
 import '@photo-sphere-viewer/core/index.css';
 import '@photo-sphere-viewer/markers-plugin/index.css';
@@ -33,6 +34,9 @@ let addingHotspot = false;
 let hintEl = null;
 let selectedViewpointId = null;
 let markersGen = 0;
+let viewerReady = false;
+let activeViewpointId = null;
+let viewpointDetectionFrame = null;
 // Last autorotate speed pushed to the plugin; a running autorotate keeps the roll
 // speed captured at start(), so we only restart it when this value changes.
 let appliedAutoRotateSpeed = null;
@@ -261,6 +265,10 @@ async function applyMarkers() {
   const gen = ++markersGen;
   const list = markers || [];
   viewpoints = list.filter((m) => m.type === 'viewpoint');
+  if (activeViewpointId && !viewpoints.some((m) => String(m.id) === activeViewpointId)) {
+    activeViewpointId = null;
+  }
+  scheduleViewpointDetection();
   const hotspots = list.filter((m) => m.type === 'hotspot');
   // Image hotspots resolve asynchronously (preload for ratio); dots resolve
   // synchronously. Build them all, then set in one pass.
@@ -375,6 +383,58 @@ function updateSelectedViewpoint(markerId) {
   }
   PandaBridge.send(PandaBridge.UPDATED, { markers: marker });
   applyMarkers();
+}
+
+function currentViewpointFrame() {
+  if (!viewer) {
+    return null;
+  }
+  const pos = viewer.getPosition();
+  return {
+    yaw: normDeg(rad2deg(pos.yaw)),
+    pitch: rad2deg(pos.pitch),
+    zoom: viewer.getZoomLevel(),
+  };
+}
+
+function viewpointDetectionOptions() {
+  const size = viewer && viewer.getSize();
+  return {
+    minFov: viewer && viewer.config && viewer.config.minFov,
+    maxFov: viewer && viewer.config && viewer.config.maxFov,
+    aspect: size && size.height ? size.width / size.height : 1,
+  };
+}
+
+function runViewpointDetection() {
+  viewpointDetectionFrame = null;
+  if (!viewer || !viewerReady || !viewpoints.length) {
+    activeViewpointId = null;
+    return;
+  }
+  const stereo = viewer.getPlugin(StereoPlugin);
+  if (stereo && stereo.isEnabled()) {
+    return;
+  }
+
+  const result = detectViewpoint(
+    viewpoints,
+    currentViewpointFrame(),
+    { activeId: activeViewpointId },
+    viewpointDetectionOptions(),
+  );
+  activeViewpointId = result.activeId;
+  if (result.triggerId) {
+    PandaBridge.send(PandaBridge.TRIGGER_MARKER, result.triggerId);
+  }
+}
+
+function scheduleViewpointDetection() {
+  if (!viewer || viewpointDetectionFrame != null) {
+    return;
+  }
+  const raf = window.requestAnimationFrame || ((cb) => window.setTimeout(cb, 0));
+  viewpointDetectionFrame = raf(runViewpointDetection);
 }
 
 function startGyro() {
@@ -517,6 +577,11 @@ function wireViewer() {
     PandaBridge.send(PandaBridge.TRIGGER_MARKER, (marker.data && marker.data.id) || marker.id);
   });
 
+  const scheduleDetection = () => scheduleViewpointDetection();
+  viewer.addEventListener('position-updated', scheduleDetection);
+  viewer.addEventListener('zoom-updated', scheduleDetection);
+  viewer.addEventListener('size-updated', scheduleDetection);
+
   // Keep autorotate in sync with the gyroscope, which toggles asynchronously (after
   // its support/permission check) and from the navbar button. Gyro on → autorotate
   // yields to it; gyro off by the user → autorotate resumes; gyro off because a
@@ -548,8 +613,10 @@ function wireViewer() {
   viewer.addEventListener(
     'ready',
     () => {
+      viewerReady = true;
       PandaBridge.send(PandaBridge.INITIALIZED);
       applyOptions();
+      scheduleViewpointDetection();
     },
     { once: true },
   );
@@ -605,6 +672,8 @@ function defaultViewpoint() {
 function createViewer(url) {
   currentUrl = url;
   viewerIsVideo = isVideo;
+  viewerReady = false;
+  activeViewpointId = null;
   // Fresh viewer: forget what was applied so applyOptions re-asserts every option.
   appliedProps = {};
   const config = {
