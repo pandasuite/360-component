@@ -127,12 +127,22 @@
     "events": [
       {
         "id": "triggerMarker",
-        "name": "Marker tapped",
-        "locale_name": { "fr_FR": "Marqueur tapé" },
+        "name": "Hotspot tapped",
+        "locale_name": { "fr_FR": "Point d'intérêt tapé" },
         "hidden": "marker.type != 'hotspot'",
         "description": "Fires when a hotspot marker is tapped.",
         "locale_description": {
           "fr_FR": "Se déclenche quand un point d'intérêt est tapé."
+        }
+      },
+      {
+        "id": "triggerMarker",
+        "name": "Viewpoint reached",
+        "locale_name": { "fr_FR": "Point de vue atteint" },
+        "hidden": "marker.type != 'viewpoint'",
+        "description": "Fires when the camera reaches a viewpoint marker.",
+        "locale_description": {
+          "fr_FR": "Se déclenche quand la caméra atteint un point de vue."
         }
       }
     ],
