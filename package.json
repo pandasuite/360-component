@@ -8,8 +8,8 @@
   "scripts": {
     "start": "vite",
     "test": "node --test",
-    "build": "rm -rf ./pandasuite-component.zip && vite build && cd build && zip -r -X '../pandasuite-component.zip' *",
-    "release": "yarn build && release-it --no-npm.publish"
+    "build": "rm -f ./pandasuite-component.zip ./360-component-v*.zip && vite build && cd build && zip -r -X \"../360-component-v$npm_package_version.zip\" *",
+    "release": "release-it --no-npm.publish"
   },
   "devDependencies": {
     "eslint": "^9.18.0",
@@ -28,10 +28,13 @@
     "three": "^0.184.0"
   },
   "release-it": {
+    "hooks": {
+      "after:bump": "yarn build"
+    },
     "github": {
       "release": true,
       "assets": [
-        "pandasuite-component.zip"
+        "360-component-v*.zip"
       ]
     }
   },
